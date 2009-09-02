@@ -63,7 +63,7 @@ class simplenoteapi
 			'stats' => $stats,
 			'headers' => $headers,
 			'body' => $result
-		);		
+		);
 
 		return $result;
 	}
@@ -144,12 +144,11 @@ class simplenoteapi
 	 *
 	 * Returns the data in objects, using the json_decode function
 	 * Returns false if it fails for any reason
-	 * 
 	 */
 	public function index()
 	{
 		$response = $this->api_get(
-			'index', 
+			'index',
 			array(
 				'auth' => $this->token,
 				'email' => $this->email
@@ -214,8 +213,7 @@ class simplenoteapi
 	{
 		$parameters = array(
 			'auth' => $this->token,
-			'email' => $this->email,
-			
+			'email' => $this->email
 		);
 
 		if (isset($note_key)) $parameters['key'] = $note_key;
