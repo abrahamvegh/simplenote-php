@@ -5,7 +5,6 @@
  * http://github.com/abrahamvegh/simplenote-php/
  *
  * USE AT YOUR OWN RISK
- * THIS CODE IS MOSTLY UNTESTED
  */
 
 class simplenoteapi
@@ -254,6 +253,49 @@ class simplenoteapi
 		if ($response['stats']['http_code'] == 200)
 		{
 			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	/*
+	 * API-powered search
+	 *
+	 * Returns data even for zero results
+	 * Returns false if it fails for any reason
+	 */
+	public function search($search_term, $max_results = 10, $offset_index = 0)
+	{
+		$response = $this->api_get(
+			'search',
+			array(
+				'query' => urlencode($search_term),
+				'results' => $max_results,
+				'offset' => $offset_index,
+				'auth' => $this->token,
+				'email' => $this->email
+			)
+		);
+
+		if ($response['stats']['http_code'] == 200)
+		{
+			$response = json_decode($response['body']);
+			$return = array(
+				'count' => $response->Response->totalRecords,
+				'results' => array()
+			);
+
+			if ($return['count'] > 0)
+			{
+				foreach ($response->Response->Results as $result)
+				{
+					if (!empty($result->key)) $return['results'][$result->key] = $result->content;
+				}
+			}
+
+			return $return;
 		}
 		else
 		{
